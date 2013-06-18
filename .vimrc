@@ -6,9 +6,9 @@ set smartindent
 set backspace=2
 set shiftround
 set foldlevel=99
-set confirm
-set laststatus=2
-set title
+set confirm " ask for confirmation when leaving buffer
+set laststatus=2 " always show status line
+set title "show title in window bar
 
 set ignorecase
 set smartcase
@@ -16,7 +16,7 @@ set incsearch
 
 set scrolloff=5 " scroll offset bottom and top
 
-set numbers "show line number
+set number "show line number
 set numberwidth=3 " line number fixed width
 
 set cursorline " highlight current line
