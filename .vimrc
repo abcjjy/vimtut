@@ -25,3 +25,5 @@ highlight CursorLine ctermbg=0 guibg=0 cterm=None term=0 " current line style
 set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v]\ [%p%%]\ [LEN=%L]
 
 "set spell " enable spell checking and use Z= for suggestion
+
+nmap gf :edit <cfile><CR> " open file in new window
