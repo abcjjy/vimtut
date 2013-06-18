@@ -27,3 +27,13 @@ set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%0
 "set spell " enable spell checking and use Z= for suggestion
 
 nmap gf :edit <cfile><CR> " open file in new window
+
+" scroll popup menu by tab
+function! CleverTab()
+   if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
+    return "\<Tab>"
+   else
+	  return "\<C-N>"
+   endif
+endfunction
+inoremap <Tab> <C-R>=CleverTab()<CR>
