@@ -2,6 +2,17 @@ set ts=4
 set sw=4
 set expandtab
 set autoindent
+set smartindent
+set backspace=2
+set shiftround
+set foldlevel=99
+set confirm
+set laststatus=2
+set title
+
+set ignorecase
+set smartcase
+set incsearch
 
 set scrolloff=5 " scroll offset bottom and top
 
