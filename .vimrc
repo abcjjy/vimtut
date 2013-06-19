@@ -147,6 +147,6 @@ call SetupVAM()
 
 set cursorline " highlight current line
 "current line style
-highlight CursorLine cterm=underline term=underline ctermbg=0 guibg=0
+highlight CursorLine cterm=underline term=underline ctermbg=None guibg=None
 
 
