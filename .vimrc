@@ -43,6 +43,8 @@ match Todo /\c\<\(TODO\|FIXME\):.*/
 "set spell " enable spell checking and use Z= for suggestion
 
 nmap gf :edit <cfile><CR> " open file in new window
+nmap <Space> <PageDown>
+nmap <S-Space> <PageUp>
 
 " scroll popup menu by tab
 function! CleverTab()
