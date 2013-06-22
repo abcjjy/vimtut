@@ -18,6 +18,7 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+let mapleader = ","
 
 set ignorecase
 set smartcase
@@ -119,7 +120,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T'], {'auto_install' : 0})
+  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory
