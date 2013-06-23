@@ -45,7 +45,8 @@ match Todo /\c\<\(TODO\|FIXME\):.*/
 
 nmap gf :edit <cfile><CR> " open file in new window
 nmap <Space> <PageDown>
-nmap <S-Space> <PageUp>
+
+map <F4> <Esc>:FSLeft<CR>
 
 " scroll popup menu by tab
 function! CleverTab()
@@ -120,7 +121,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz'], {'auto_install' : 0})
+  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -150,4 +151,5 @@ set cursorline " highlight current line
 "current line style
 highlight CursorLine cterm=underline term=underline ctermbg=None guibg=None
 
+iabbrev cctd //TODO: not implemented 
 
