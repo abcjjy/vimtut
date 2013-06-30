@@ -1,6 +1,8 @@
 set ts=4
 set sw=4
 set expandtab
+set wrap
+set linebreak
 set autoindent
 set smartindent
 set backspace=2
@@ -45,8 +47,9 @@ match Todo /\c\<\(TODO\|FIXME\):.*/
 
 nmap gf :edit <cfile><CR> " open file in new window
 nmap <Space> <PageDown>
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
-map <F4> <Esc>:FSLeft<CR><C-L>
+map <F4> <Esc>:FSLeft<CR>
 
 " scroll popup menu by tab
 function! CleverTab()
@@ -121,7 +124,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep'], {'auto_install' : 0})
+  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
 
   " Addons are put into plugin_root_dir/plugin-name directory
