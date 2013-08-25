@@ -124,8 +124,8 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json'], {'auto_install' : 0})
-  " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
+  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:marijnh/tern_for_vim'], {'auto_install' : 0})
+  " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0}) 
 
   " Addons are put into plugin_root_dir/plugin-name directory
   " unless those directories exist. Then they are activated.
