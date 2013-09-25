@@ -33,6 +33,7 @@ au BufRead,BufNewFile *.pkg set syntax=cpp
 au BufRead,BufNewFile *.h,*.cpp set fdm=syntax 
 au BufRead,BufNewFile *.h,*.cpp normal zR
 au BufRead,BufNewFile *.h,*.cpp,*.c set cindent
+au BufRead,BufNewFile *.js set fdm=indent
 
 set scrolloff=5 " scroll offset bottom and top
 
@@ -46,7 +47,6 @@ match Todo /\c\<\(TODO\|FIXME\):.*/
 "set spell " enable spell checking and use Z= for suggestion
 
 nmap gf :edit <cfile><CR> " open file in new window
-nmap <Space> <PageDown>
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 map <F4> <Esc>:FSLeft<CR>
@@ -160,4 +160,20 @@ iabbrev cctd //TODO: not implemented
 let g:EasyGrepFileAssociations=expand("$HOME/.vim/vim-addons/EasyGrep/plugin/EasyGrepFileAssociations")
 let g:EasyGrepMode = 2
 let g:EasyGrepRecursive = 1
+
+"Search in visual selected block
+function! RangeSearch(direction)
+  call inputsave()
+  let g:srchstr = input(a:direction)
+  call inputrestore()
+  if strlen(g:srchstr) > 0
+    let g:srchstr = g:srchstr.
+          \ '\%>'.(line("'<")-1).'l'.
+          \ '\%<'.(line("'>")+1).'l'
+  else
+    let g:srchstr = ''
+  endif
+endfunction
+vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
+vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
 
