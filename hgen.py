@@ -7,7 +7,7 @@ from collections import defaultdict
 import StringIO
 
 def findDeclareTemplate(src):
-    startRe = re.compile(r'/\*\s*H_Delare')
+    startRe = re.compile(r'/\*\s*H_Declare')
     endRe = re.compile(r'\*/')
     start = startRe.search(src)
     end = endRe.search(src, start.end())
@@ -16,7 +16,7 @@ def findDeclareTemplate(src):
 
 def findMethodDefs(src):
     methodRe = re.compile(r'//\s*H_Method\b')
-    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+\s*[\*&]*\s+)?(?:[\w:]+::)?(\w+)(?:<\w+>)?\s*::\s*([^:()\s]+\s*\([^()]*\))')
+    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\*&]*\s+)?(?:[\w:]+::)?(\w+)(?:<\w+>)?\s*::\s*([^:()\s]+\s*\([^()]*\))')
     pos = 0
     def factory():
         return defaultdict(list)
@@ -64,7 +64,7 @@ def lookbackComment(src, pos):
 
 def findFuncDefs(src):
     funcRe = re.compile(r'//\s*H_Function\b')
-    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>)?\s+(\w+)\s+(?:[\w:]+::)?(\w+\s*\([^()]+\))')
+    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\*&]*\s+)(?:[\w:]+::)?([^:()\s]+\s*\([^()]*\))')
     pos = 0
     funcs = []
     for mark in funcRe.finditer(src):
@@ -72,12 +72,25 @@ def findFuncDefs(src):
         if not m:
             print 'Not found function at %d'%mark.end()
             continue
-        funcs.append(m.group().strip())
+        funcs.append(m.group().strip() + ";")
     return funcs
 
-def fillTemplate(src, methods, functions):
+def findVarDefs(src):
+    varRe = re.compile(r'//\s*H_Variable\b')
+    defRe = re.compile(r'\s*([^()=]+)')
+    varis = []
+    for mark in varRe.finditer(src):
+        m = defRe.match(src, mark.end())
+        if not m:
+            print 'Not found variables def at %d'%mark.end()
+            continue
+        varis.append("extern " + m.group(1).strip() + ";")
+    return varis;
+
+def fillTemplate(src, methods, functions, variables):
     methodHolderRe = re.compile(r'//\s*H_MethodDeclare\s+(\w+)')
-    funcHolderRe = re.compile(r'//\s*H_FunctionDelare')
+    funcHolderRe = re.compile(r'//\s*H_FunctionDec?lare')
+    varHoldersRe = re.compile(r'//\s*H_VariableDeclare')
     dest = StringIO.StringIO()
     lastPos = 0
     for i, m in enumerate(methodHolderRe.finditer(src)):
@@ -98,9 +111,11 @@ def fillTemplate(src, methods, functions):
                 dest.write(';\n')
     dest.write(src[lastPos:])
     src = dest.getvalue()
-    return funcHolderRe.sub(';\n'.join(functions)+';', src)
+    src = funcHolderRe.sub('\n'.join(functions), src)
+    return varHoldersRe.sub('\n'.join(variables), src) 
 
 def addMacros(h, fn):
+    fn = os.path.basename(fn)
     macro = '__'+fn.replace('.', '_').upper()+'__'
     header = '//HGEN generated header files\n'
     header += '#ifndef %s\n#define %s\n'%(macro, macro)
@@ -110,7 +125,8 @@ def process(src, fn):
     decls = findDeclareTemplate(src)
     methods = findMethodDefs(src)
     functions = findFuncDefs(src)
-    h = fillTemplate(decls, methods, functions)
+    variables = findVarDefs(src)
+    h = fillTemplate(decls, methods, functions, variables)
     #print h
     return addMacros(h, fn)
 
@@ -124,7 +140,7 @@ def main():
                 content = fp.read(100)
             if not content.startswith('//HGEN'):
                 print '%s is not managed by HGEN, skip it'%outf
-                #continue
+                continue
         with open(f) as fp:
             src = fp.read()
         h = process(src, outf)
