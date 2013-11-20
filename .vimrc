@@ -125,7 +125,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:marijnh/tern_for_vim', 'github:moll/vim-bbye'], {'auto_install' : 0})
+  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:marijnh/tern_for_vim', 'github:moll/vim-bbye', 'vim-snippets'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0}) 
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -181,4 +181,12 @@ vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|ex
 autocmd BufWritePost *.cpp silent execute "!hgen.py %:p" | redraw!
 
 nnoremap <Leader>q :Bdelete<CR>
+
+ab hdcl /*H_Declare<CR><CR><CR><CR>*/<Esc>kk
+ab hmpv //H_Method public virtual<Esc>a
+ab hmp //H_Method public<Esc>a
+ab hmov //H_Method protected virtual<Esc>a
+ab hmi //H_Method private<Esc>a
+
+
 

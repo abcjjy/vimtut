@@ -16,7 +16,7 @@ def findDeclareTemplate(src):
 
 def findMethodDefs(src):
     methodRe = re.compile(r'//\s*H_Method\b')
-    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\*&]*\s+)?(?:[\w:]+::)?(\w+)(?:<\w+>)?\s*::\s*([^:()\s]+\s*\([^()]*\))')
+    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\w\*&<>]*\s+)?(?:[\w:]+::)?(\w+)(?:<\w+>)?\s*::\s*([^:()\s]+\s*\([^()]*\))')
     pos = 0
     def factory():
         return defaultdict(list)
@@ -64,7 +64,7 @@ def lookbackComment(src, pos):
 
 def findFuncDefs(src):
     funcRe = re.compile(r'//\s*H_Function\b')
-    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\*&]*\s+)(?:[\w:]+::)?([^:()\s]+\s*\([^()]*\))')
+    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\w\*&<>]*\s+)(?:[\w:]+::)?([^:()\s]+\s*\([^()]*\))')
     pos = 0
     funcs = []
     for mark in funcRe.finditer(src):
