@@ -35,6 +35,8 @@ au BufRead,BufNewFile *.h,*.cpp set fdm=syntax
 au BufRead,BufNewFile *.h,*.cpp normal zR
 au BufRead,BufNewFile *.h,*.cpp,*.c set cindent
 au BufRead,BufNewFile *.js set fdm=indent
+au BufRead,BufNewFile *.sef set syntax=json|set fdm=indent
+au BufRead,BufNewFile *.json set fdm=indent
 
 set scrolloff=5 " scroll offset bottom and top
 
@@ -125,7 +127,7 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:marijnh/tern_for_vim', 'github:moll/vim-bbye', 'vim-snippets'], {'auto_install' : 0})
+  call vam#ActivateAddons(['clang_complete', 'github:vim-scripts/AutoComplPop', 'snipMate', 'taglist', 'Command-T', 'wmgraphviz', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:marijnh/tern_for_vim', 'github:moll/vim-bbye', 'vim-snippets', 'github:danro/rename.vim', 'github:tpope/vim-eunuch'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0}) 
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -178,15 +180,44 @@ endfunction
 vnoremap <silent> / :<C-U>call RangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
 vnoremap <silent> ? :<C-U>call RangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
 
-autocmd BufWritePost *.cpp silent execute "!hgen.py %:p" | redraw!
+autocmd BufWritePost *.cpp silent execute "!hgen2.py %:p" | redraw!
+autocmd BufWritePost *.mm silent execute "!hgen2.py %:p" | redraw!
 
 nnoremap <Leader>q :Bdelete<CR>
 
-ab hdcl /*H_Declare<CR><CR><CR><CR>*/<Esc>kk
-ab hmpv //H_Method public virtual<Esc>a
-ab hmp //H_Method public<Esc>a
-ab hmov //H_Method protected virtual<Esc>a
-ab hmi //H_Method private<Esc>a
+"hgen short cut
+imap hdcl /*H_Declare<CR><Esc>cc#include <string><Esc><<o<CR>*/<Esc>ka
+imap hmpv //H_Method public virtual<CR><Esc>cc
+imap hmp //H_Method public<CR><Esc>cc
+imap hmps //H_Method public static<CR><Esc>cc
+imap hmo //H_Method protected<CR><Esc>cc
+imap hmov //H_Method protected virtual<CR><Esc>cc
+imap hmi //H_Method private<CR><Esc>cc
+imap hvp //H_MVar public<Esc>a
+imap hvo //H_MVar protected<Esc>a
+imap hvi //H_MVar private<Esc>a
+imap hvps //H_MVar public static<CR><Esc>cc
+imap hvos //H_MVar protected static<CR><Esc>cc
+imap hvis //H_MVar private static<CR><Esc>cc
 
+imap hdcc /*H_Declare<CR><Esc>cc#incc<CR>//H_Class <C-n><CR>*/<Esc>kk$a
+imap #incc #include "cocos2d.h"<CR>#include "cocos-ext.h"<CR>USING_NS_CC;<CR>USING_NS_CC_EXT;<CR>
+imap usst using namespace std;<CR>
 
+"break auto inserted line headers
+imap <C-n> <Esc>o<Esc>cc
+
+nmap <Leader>j :%!python -m json.tool<CR>
+
+nmap <Leader>r <ESC>:Rename 
+
+"This is for autoclosing brace in c++ source
+imap {<CR> {}<Left><CR><Esc>O
+
+"This is only for my game projects
+iab frjs void ::fromJson(const JSONNode & json)<ESC>^wi
+
+"cocos2dx tags
+"set tags+=/Users/jjy/code/cocos2d-x-2.2/tags
+set tags+=/Users/jjy/code/cocos2dx-store/tags
 

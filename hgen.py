@@ -16,7 +16,7 @@ def findDeclareTemplate(src):
 
 def findMethodDefs(src):
     methodRe = re.compile(r'//\s*H_Method\b')
-    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\w\*&<>]*\s+)?(?:[\w:]+::)?(\w+)(?:<\w+>)?\s*::\s*([^:()\s]+\s*\([^()]*\))')
+    defRe = re.compile(r'(?:template\s*<\s*(?:class|typename)\s+\w+\s*>\s+)?([\w:]+(?:\w+\s+)*\s*[\w\*&<>]*\s+)?(?:[\w:]+::)?(\w+)(?:<\w+>)?\s*::\s*([^:()\s]+\s*\([^()]*\)(?:\s*const)?)')
     pos = 0
     def factory():
         return defaultdict(list)
@@ -51,6 +51,9 @@ def findMethodDefs(src):
         methods[cls][accessModifier].append({'def': ' '.join(mlist), 'comment': comment})
     return methods
 
+def findMemberVarDefs(src):
+    pass
+
 def lookbackComment(src, pos):
     cclose = src.rfind('*/', 0, pos)+2
     copen = src.rfind('/*', 0, pos)
@@ -64,7 +67,7 @@ def lookbackComment(src, pos):
 
 def findFuncDefs(src):
     funcRe = re.compile(r'//\s*H_Function\b')
-    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?(\w+(?:\w+\s+)*\s*[\w\*&<>]*\s+)(?:[\w:]+::)?([^:()\s]+\s*\([^()]*\))')
+    defRe = re.compile(r'(?:template\s*<\s*class\s+\w+\s*>\s+)?([\w:]+(?:\w+\s+)*\s*[\w\*&<>]*\s+)(?:[\w:]+::)?([^:()\s]+\s*\([^()]*\))')
     pos = 0
     funcs = []
     for mark in funcRe.finditer(src):
@@ -91,6 +94,7 @@ def fillTemplate(src, methods, functions, variables):
     methodHolderRe = re.compile(r'//\s*H_MethodDeclare\s+(\w+)')
     funcHolderRe = re.compile(r'//\s*H_FunctionDec?lare')
     varHoldersRe = re.compile(r'//\s*H_VariableDeclare')
+    mvarHolderRe = re.compile(r'//\s*H_MVarDeclare')
     dest = StringIO.StringIO()
     lastPos = 0
     for i, m in enumerate(methodHolderRe.finditer(src)):
@@ -126,7 +130,8 @@ def process(src, fn):
     methods = findMethodDefs(src)
     functions = findFuncDefs(src)
     variables = findVarDefs(src)
-    h = fillTemplate(decls, methods, functions, variables)
+    mvars = findMemberVarDefs(src)
+    h = fillTemplate(decls, methods, functions, variables, mvars)
     #print h
     return addMacros(h, fn)
 
@@ -135,15 +140,19 @@ def main():
     for f in args:
         bname, ext = os.path.splitext(f)
         outf = bname + '.h'
+        content = ''
         if os.path.exists(outf):
             with open(outf) as fp:
-                content = fp.read(100)
+                content = fp.read()
             if not content.startswith('//HGEN'):
                 print '%s is not managed by HGEN, skip it'%outf
                 continue
         with open(f) as fp:
             src = fp.read()
         h = process(src, outf)
+        if content == h:
+            print "No change to header ", outf
+            return
         with open(outf, 'w') as fp:
             fp.write(h)
         print 'write to ', outf
