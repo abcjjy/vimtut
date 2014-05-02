@@ -89,7 +89,7 @@ class MemberMethod(object):
             logging.debug('find tagm')
             method = MemberMethod(access=xstr(tagm.group('access')), prefix_modifier=xstr(tagm.group('prefix_modifier')).strip())
             method.comment = xstr(lookbackComment(src, tagm.start()))
-            mdecl = MemberMethod.methodRe.search(src, tagm.end(), tagm.end()+1000)
+            mdecl = MemberMethod.methodRe.search(src, tagm.end(), tagm.end()+200)
             if mdecl:
                 method.name = xstr(mdecl.group('name'))
                 method.clz = xstr(mdecl.group('clz'))
@@ -144,7 +144,7 @@ class MemberVar(object):
             mvar.clz = lookback4clz(src, tagm.start())
             logging.debug(tagm.group(0))
             logging.debug(src[tagm.end():tagm.end()+100])
-            mvardecl = MemberVar.mvar_re.search(src, tagm.end(), tagm.end()+500)
+            mvardecl = MemberVar.mvar_re.search(src, tagm.end(), tagm.end()+200)
             if mvardecl:
                 mvar.name = xstr(mvardecl.group('name'))
                 if mvardecl.group('clz'):
@@ -253,8 +253,12 @@ class FunctionDef(object):
         return functions
 
 def makeClassTemplate(clz):
-    name, parent = map(str.strip, clz.split(':'))
-    t = string.Template('''class $clz : $parent
+    pair = map(str.strip, clz.split(':'))
+    name = pair[0]
+    parent = ''
+    if len(pair) > 1:
+        parent = ' : '+pair[1]
+    t = string.Template('''class $clz$parent
 {
 //H_MethodDeclare $clz 
 //H_MVarDeclare $clz

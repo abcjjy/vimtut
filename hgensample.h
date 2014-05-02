@@ -58,6 +58,7 @@ public:
 private:
     int m_isafa;
     std::vector<int> m_aVec;
+    int m_ilakfla;
 protected:
     std::map<int, int> m_omap;
 public:

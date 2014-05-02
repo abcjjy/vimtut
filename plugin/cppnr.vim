@@ -15,7 +15,7 @@ path = vim.eval('a:path')
 di = os.path.dirname(path)
 os.makedirs(di)
 
-tpl = string.Template('''/*H_Delare
+tpl = string.Template('''/*H_Declare
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include <string>

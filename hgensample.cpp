@@ -51,6 +51,8 @@ void YYY::foo()
     m_omap.clear();
     //H_MVar private std::vector<int>
     m_aVec = {};
+    //H_MVar private int
+    m_ilakfla=1;
 }
 
 //H_MVar public static
