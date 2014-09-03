@@ -201,8 +201,8 @@ imap hvos //H_MVar protected static<CR><Esc>cc
 imap hvis //H_MVar private static<CR><Esc>cc
 
 imap hdcc /*H_Declare<CR><Esc>cc#incc<CR>//H_Class <C-n><CR>*/<Esc>kk$a
-imap #incc #include "cocos2d.h"<CR>#include "cocos-ext.h"<CR>USING_NS_CC;<CR>USING_NS_CC_EXT;<CR>
-imap usst using namespace std;<CR>
+"imap #incc #include "cocos2d.h"<CR>#include "cocos-ext.h"<CR>USING_NS_CC;<CR>USING_NS_CC_EXT;<CR>
+"imap usst using namespace std;<CR>
 
 "break auto inserted line headers
 imap <C-n> <Esc>o<Esc>cc
@@ -216,6 +216,7 @@ imap {<CR> {}<Left><CR><Esc>O
 
 "This is only for my game projects
 iab frjs void ::fromJson(const JSONNode & json)<ESC>^wi
+iab tojs JSONNode ::toJson()<ESC>^wi
 
 "cocos2dx tags
 "set tags+=/Users/jjy/code/cocos2d-x-2.2/tags

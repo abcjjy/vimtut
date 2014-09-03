@@ -63,7 +63,7 @@ protected:
     std::map<int, int> m_omap;
 public:
     int m_iMember; // variable comment
-    float m_fFm;
+    float m_fFmv;
     static int adfa;
 };
 

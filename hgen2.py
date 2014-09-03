@@ -60,7 +60,7 @@ class DeclareTemplate(object):
 
 class MemberMethod(object):
     tagRe = re.compile(r'//\s*H_Method\s+(?P<access>\w+)(?:\s+(?P<prefix_modifier>[\w\s]+))?\s*$', re.MULTILINE)
-    methodRe = re.compile(r'(?P<return_type>[\w:]+(?:\w+\s+)*\s*[\w\*&<>]*\s+)?(?:[\w:]+::)?(?P<clz>\w+)\s*::\s*(?P<name>[^:()\s]+)\s*(?P<args>\([^()]*\))\s*(?P<suffix_modifier>[\w\s]+)?', re.MULTILINE)
+    methodRe = re.compile(r'(?P<return_type>\w[\s\w\*&<>:]*\s+)?(?:[\w:]+::)?(?P<clz>\w+)\s*::\s*(?P<name>[^:()\s]+)\s*(?P<args>\([^()]*\))\s*(?P<suffix_modifier>[\w\s]+)?', re.MULTILINE)
     def __init__(self, name=None, clz=None, access=None, prefix_modifier=None, return_type=None, args=None, suffix_modifier=None):
         self.name = name
         self.clz = clz
@@ -89,7 +89,7 @@ class MemberMethod(object):
             logging.debug('find tagm')
             method = MemberMethod(access=xstr(tagm.group('access')), prefix_modifier=xstr(tagm.group('prefix_modifier')).strip())
             method.comment = xstr(lookbackComment(src, tagm.start()))
-            mdecl = MemberMethod.methodRe.search(src, tagm.end(), tagm.end()+200)
+            mdecl = MemberMethod.methodRe.search(src, tagm.end(), tagm.end()+500)
             if mdecl:
                 method.name = xstr(mdecl.group('name'))
                 method.clz = xstr(mdecl.group('clz'))
@@ -97,6 +97,7 @@ class MemberMethod(object):
                 method.suffix_modifier = xstr(mdecl.group('suffix_modifier'))
                 method.args = xstr(mdecl.group('args'))
                 methods.append(method)
+                logging.debug("method: %s",str(method))
         return methods
 
 def xstr(o):
@@ -118,7 +119,7 @@ def lookbackComment(src, pos):
 
 class MemberVar(object):
     tag_re = re.compile(r'//\s*H_MVar\s+(?P<access>\w+)\b(?P<dtype>.+)?$', re.MULTILINE)
-    mvar_re = re.compile(r'(?:(?P<dtype>[\w\d<>:]+)\s+(?P<clz>\w+)\s*::\s*)?(?P<name>[\w\d]+)[^\n]+;(?P<comment>[^\n]*//[^\n]+)?$', re.MULTILINE)
+    mvar_re = re.compile(r'(?:(?P<dtype>(?:const\s+)?[\w\*\d<>:,]+)\s+(?P<clz>\w+)\s*::\s*)?(?P<name>[\w\d]+)[^\n;]*;?[^\n/]*(?P<comment>//[^\n]+)?$', re.MULTILINE)
     #mvar_re = re.compile(r'(?:(?P<clz>\w+)\s*::\s*)?(?P<name>[\w\d]+)', re.MULTILINE)
     def __init__(self, name=None, clz=None, access=None, dtype=None):
         self.name = name
@@ -157,7 +158,7 @@ class MemberVar(object):
 
 def lookback4clz(src, pos):
     while True:
-        start = src.rfind('H_Method', 0, pos)
+        start = src.rfind('H_Method ', 0, pos)
         if start < 0:
             return None
         start = src.rfind('//', 0, start)
@@ -216,7 +217,7 @@ class ClassDef(object):
             if mv.clz not in cds:
                 cd = ClassDef()
                 cd.name = mv.clz
-                cds[mm.clz] = cd
+                cds[mv.clz] = cd
             else:
                 cd = cds[mv.clz]
             cd.variables.append(mv)
@@ -224,7 +225,7 @@ class ClassDef(object):
 
 class FunctionDef(object):
     tag_re = re.compile(r'//\s*H_Function\b.*$', re.MULTILINE)
-    func_re = re.compile(r'(?P<return_type>[\w:]+(?:\w+\s+)*\s*[\w\*&<>]*\s+)(?:[\w:]+::)?(?P<name>[^:()\s]+)\s*(?P<args>\([^()]*\))', re.MULTILINE)
+    func_re = re.compile(r'(?P<return_type>[\w:]+(?:\w+\s+)*\s*[\w\*&<:>&]*\s+)(?:[\w:]+::)?(?P<name>[^:()\s]+)\s*(?P<args>\([^()]*\))', re.MULTILINE)
     def __init__(self, name=None, return_type=None, args=None):
         self.name = name
         self.return_type = return_type

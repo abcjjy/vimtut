@@ -1,4 +1,4 @@
-/*H_Delare
+/*H_Declare
 #include <string>
 using namespace std;
 
