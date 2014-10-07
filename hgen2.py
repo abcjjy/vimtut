@@ -95,7 +95,7 @@ class MemberMethod(object):
                 method.clz = xstr(mdecl.group('clz'))
                 method.return_type = xstr(mdecl.group('return_type'))
                 method.suffix_modifier = xstr(mdecl.group('suffix_modifier'))
-                method.args = xstr(mdecl.group('args'))
+                method.args = xstr(mdecl.group('args')).replace('/*','').replace('*/', '')
                 methods.append(method)
                 logging.debug("method: %s",str(method))
         return methods
