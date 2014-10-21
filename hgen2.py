@@ -60,7 +60,7 @@ class DeclareTemplate(object):
 
 class MemberMethod(object):
     tagRe = re.compile(r'//\s*H_Method\s+(?P<access>\w+)(?:\s+(?P<prefix_modifier>[\w\s]+))?\s*$', re.MULTILINE)
-    methodRe = re.compile(r'(?P<return_type>\w[\s\w\*&<>,:]*\s+)?(?:[\w:]+::)?(?P<clz>\w+)\s*::\s*(?P<name>[^:()\s]+)\s*(?P<args>\([^{]*\))\s*(?P<suffix_modifier>[\w\s]+)?', re.MULTILINE)
+    methodRe = re.compile(r'(?P<return_type>\w[\s\w\*&<>,:]*\s+)?(?:[\w:]+::)?(?P<clz>\w+)\s*::\s*(?P<name>[^:()\s]+)\s*(?P<args>\([^{\n]*\))\s*(?P<suffix_modifier>[\w\s]+)?', re.MULTILINE)
     def __init__(self, name=None, clz=None, access=None, prefix_modifier=None, return_type=None, args=None, suffix_modifier=None):
         self.name = name
         self.clz = clz
