@@ -314,4 +314,6 @@ vmap <Leader>a= :Tabularize /=<CR>
 nmap <Leader>a: :Tabularize /:\zs<CR>
 vmap <Leader>a: :Tabularize /:\zs<CR>
 
+"Fix bug in signature plugin while delete mark
+nmap m- :<C-U>call signature#mark#Purge("line")<CR>:SignatureRefresh<CR>
 
