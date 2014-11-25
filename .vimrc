@@ -130,7 +130,7 @@ fun! SetupVAM()
 
   " Tell VAM which plugins to fetch & load:
   "call vam#ActivateAddons(['AutoComplPop', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim'], {'auto_install' : 0})
-  call vam#ActivateAddons(['github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'OmniCppComplete', 'github:Shougo/neocomplete.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:embear/vim-localvimrc', 'github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'OmniCppComplete', 'github:Shougo/neocomplete.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0}) 
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -316,4 +316,7 @@ vmap <Leader>a: :Tabularize /:\zs<CR>
 
 "Fix bug in signature plugin while delete mark
 nmap m- :<C-U>call signature#mark#Purge("line")<CR>:SignatureRefresh<CR>
+
+"localvimrc
+let g:localvimrc_ask=0
 
