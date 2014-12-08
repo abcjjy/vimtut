@@ -38,6 +38,8 @@ au BufRead,BufNewFile *.js set fdm=indent
 au BufRead,BufNewFile *.sef set syntax=json|set fdm=indent
 au BufRead,BufNewFile *.json set fdm=indent
 au BufRead,BufNewFile *.yaml set sw=2|set ts=2
+au BufRead,BufNewFile *.as set syntax=cpp "angelscript
+au BufRead,BufNewFile *.angelscript set syntax=cpp "angelscript
 
 set scrolloff=5 " scroll offset bottom and top
 
