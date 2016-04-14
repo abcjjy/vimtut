@@ -1,3 +1,4 @@
+set t_Co=256
 set hidden
 set ts=4
 set sw=4
@@ -46,7 +47,7 @@ set scrolloff=5 " scroll offset bottom and top
 set number "show line number
 set numberwidth=3 " line number fixed width
 
-set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v]\ [%p%%]\ [LEN=%L]
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v]\ [%p%%]\ [LEN=%L]\ %{ObsessionStatus()}
 
 match Todo /\c\<\(TODO\|FIXME\):.*/
 
@@ -132,7 +133,7 @@ fun! SetupVAM()
 
   " Tell VAM which plugins to fetch & load:
   "call vam#ActivateAddons(['AutoComplPop', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim'], {'auto_install' : 0})
-  call vam#ActivateAddons(['github:abcjjy/cscope_mappings', 'github:tpope/vim-fugitive', 'github:plasticboy/vim-markdown', 'github:embear/vim-localvimrc', 'github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'OmniCppComplete', 'github:Shougo/neocomplete.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:abcjjy/cscope_mappings', 'github:tpope/vim-fugitive', 'github:plasticboy/vim-markdown', 'github:embear/vim-localvimrc', 'github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'OmniCppComplete', 'github:Shougo/neocomplete.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim', 'github:tpope/vim-obsession', 'github:altercation/vim-colors-solarized'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0}) 
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -212,7 +213,7 @@ imap hdcc /*H_Declare<CR><Esc>cc#incc<CR>//H_Class <C-n><CR>*/<Esc>kk$a
 "break auto inserted line headers
 imap <C-n> <Esc>o<Esc>cc
 
-nmap <Leader>j :%!python -m json.tool<CR>
+nmap <Leader>j :%!python -c 'import sys,json;print json.dumps(json.loads(sys.stdin.read()),indent=4,ensure_ascii=False).encode("utf-8")'<CR>
 
 nmap <Leader>r <ESC>:Rename 
 
@@ -225,7 +226,8 @@ iab tojs JSONNode ::toJson()<ESC>^wi
 
 "cocos2dx tags
 "set tags+=/Users/jjy/code/cocos2d-x-2.2/tags
-set tags+=/Users/jjy/code/cocos2dx-store/tags
+set tags+=~/exhd/code/libcocos2d-x-3.10/tags
+set tags+=~/code/qqgc/tags
 
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
@@ -236,6 +238,13 @@ let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" link filetypes for completion source
+if !exists('g:neocomplete#same_filetypes')
+    let g:neocomplete#same_filetypes = {}
+endif
+let g:neocomplete#same_filetypes.cpp = 'c,hpp,h,json,xml,csv'
+let g:neocomplete#same_filetypes.c = 'c,h,json,xml,csv'
 
 " Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
@@ -324,4 +333,10 @@ nmap m- :<C-U>call signature#mark#Purge("line")<CR>:SignatureRefresh<CR>
 
 "localvimrc
 let g:localvimrc_ask=0
+
+"set background=dark
+"let g:solarized_termcolors=256
+"colorscheme solarized
+
+map <LEADER>er <ESC>:!python % &<CR>
 

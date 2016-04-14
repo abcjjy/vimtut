@@ -65,6 +65,10 @@ class MemberMethod(object):
         self.name = name
         self.clz = clz
         self.access = access
+        self.override = False
+        if 'override' in prefix_modifier:
+            prefix_modifier = prefix_modifier.replace('override', '')
+            self.override = True
         self.prefix_modifier = prefix_modifier
         self.suffix_modifier = suffix_modifier
         self.return_type = return_type
@@ -75,7 +79,7 @@ class MemberMethod(object):
         return str(vars(self))
 
     def getDecl(self):
-        code = ('%s %s %s %s %s'%(self.prefix_modifier, self.return_type, self.name, self.args, self.suffix_modifier)).strip() + ';'
+        code = ('%s %s %s %s %s %s'%(self.prefix_modifier, self.return_type, self.name, self.args, self.suffix_modifier, 'override' if self.override else '')).strip() + ';'
         if self.comment:
             return '\n'.join([self.comment, code])
         else:
