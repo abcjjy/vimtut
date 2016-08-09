@@ -11,6 +11,8 @@ import string
 import logging
 import itertools
 
+SrcHeaderReStr = r'/\*\s*H_Dec?lare'
+
 class CodeFile(object):
     def __init__(self, source):
         self.source = source
@@ -40,7 +42,7 @@ class DeclareTemplate(object):
     varHoldersRe = re.compile(r'//\s*H_VariableDeclare', re.MULTILINE)
 
     def __init__(self, src):
-        startRe = re.compile(r'/\*\s*H_Dec?lare')
+        startRe = re.compile(SrcHeaderReStr)
         endRe = re.compile(r'\*/')
         start = startRe.search(src)
         end = endRe.search(src, start.end())
@@ -293,6 +295,11 @@ def main():
                 continue
         with open(f) as fp:
             src = CodeFile(fp.read())
+
+        if not re.match(SrcHeaderReStr, src.source):
+            logging.info('%s is not managed by HGEN, skip it'%outf)
+            continue
+    
         h = src.genHeader(outf)
         if content == h:
             logging.info("No change to header %s", outf)
