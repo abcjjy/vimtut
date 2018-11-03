@@ -14,7 +14,6 @@ set confirm " ask for confirmation when leaving buffer
 set laststatus=2 " always show status line
 set title "show title in window bar
 set showcmd
-colorscheme desert
 let mapleader=","
 syntax on
 filetype on
@@ -23,10 +22,12 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 let mapleader = ","
+let g:indentLine_setColors = 0
 
 set ignorecase
 set smartcase
 set incsearch
+set wildignore=*.o,*.meta,*.a,*.so
 
 hi Pmenu ctermfg=White ctermbg=DarkBlue
 hi PmenuSel ctermfg=DarkBlue ctermbg=White
@@ -38,9 +39,11 @@ au BufRead,BufNewFile *.h,*.cpp,*.c set cindent
 au BufRead,BufNewFile *.js set fdm=indent
 au BufRead,BufNewFile *.sef set syntax=json|set fdm=indent
 au BufRead,BufNewFile *.json set fdm=indent
-au BufRead,BufNewFile *.yaml set sw=2|set ts=2
 au BufRead,BufNewFile *.as set syntax=cpp "angelscript
 au BufRead,BufNewFile *.angelscript set syntax=cpp "angelscript
+
+au BufEnter * set sw=4|set ts=4
+au BufEnter *.yaml set sw=2|set ts=2
 
 set scrolloff=5 " scroll offset bottom and top
 
@@ -55,23 +58,9 @@ match Todo /\c\<\(TODO\|FIXME\):.*/
 
 nmap gf :edit <cfile><CR> " open file in new window
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
+nnoremap <Leader>S :%s/<C-r><C-w>/
 
 map <F4> <Esc>:FSLeft<CR>
-
-" scroll popup menu by tab
-function! CleverTab()
-   if strpart( getline('.'), 0, col('.')-1 ) =~ '^\s*$'
-    return "\<Tab>"
-   else
-	  return "\<C-N>"
-   endif
-endfunction
-inoremap <Tab> <C-R>=CleverTab()<CR>
-
-" clang_complete options
-let g:clang_snippets = 1
-let g:clang_snippets_engine = 'clang_complete'
-let g:clang_library_path = '/Applications/Xcode.app//Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
 
 set completeopt=menuone,longest
 
@@ -132,8 +121,8 @@ fun! SetupVAM()
   let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
   " Tell VAM which plugins to fetch & load:
-  "call vam#ActivateAddons(['AutoComplPop', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:jakar/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim'], {'auto_install' : 0})
-  call vam#ActivateAddons(['github:abcjjy/cscope_mappings', 'github:tpope/vim-fugitive', 'github:plasticboy/vim-markdown', 'github:embear/vim-localvimrc', 'github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'OmniCppComplete', 'github:Shougo/neocomplete.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim', 'github:tpope/vim-obsession', 'github:altercation/vim-colors-solarized'], {'auto_install' : 0})
+  call vam#ActivateAddons(['github:abcjjy/cscope_mappings', 'github:tpope/vim-fugitive', 'github:plasticboy/vim-markdown', 'github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'github:Shougo/neocomplete.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim', 'github:tpope/vim-obsession','github:lepture/vim-jinja', 'github:kablamo/vim-git-log', 'github:abcjjy/diokai', 'github:jiangmiao/auto-pairs', 'github:Yggdroot/indentLine', 'github:vim-scripts/ShaderHighLight'], {'auto_install' : 0})
+  "call vam#ActivateAddons(['github:abcjjy/cscope_mappings', 'github:tpope/vim-fugitive', 'github:plasticboy/vim-markdown', 'github:embear/vim-localvimrc', 'github:kien/ctrlp.vim', 'github:kshenoy/vim-signature', 'github:godlygeek/tabular', 'OmniCppComplete', 'github:Shougo/neocomplete.vim',  'github:Shougo/neocomplcache.vim', 'FSwitch', 'EasyGrep', 'The_NERD_Commenter', 'EasyMotion', 'github:elzr/vim-json', 'github:moll/vim-bbye', 'github:danro/rename.vim', 'github:tpope/vim-obsession','github:lepture/vim-jinja', 'github:kablamo/vim-git-log', 'github:Yggdroot/indentLine', 'github:altercation/vim-colors-solarized', 'github:abcjjy/diokai', 'github:encody/nvim'], {'auto_install' : 0})
   " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0}) 
 
   " Addons are put into plugin_root_dir/plugin-name directory
@@ -161,9 +150,10 @@ call SetupVAM()
 
 set cursorline " highlight current line
 "current line style
-highlight CursorLine cterm=underline term=underline ctermbg=None guibg=None
+"highlight CursorLine cterm=underline term=underline ctermbg=None guibg=None
 
 iabbrev cctd //TODO: not implemented 
+iabbrev catd CCASSERT(false, "Not implemented");
 
 "EasyGrep options
 let g:EasyGrepFileAssociations=expand("$HOME/.vim/vim-addons/EasyGrep/plugin/EasyGrepFileAssociations")
@@ -194,6 +184,7 @@ nnoremap <Leader>q :Bdelete<CR>
 "hgen short cut
 imap hdcl /*H_Declare<CR><Esc>cc#include <string><Esc><<o<CR>*/<Esc>ka
 imap hmpv //H_Method public virtual<CR><Esc>cc
+imap hmpo //H_Method public virtual override<CR><Esc>cc
 imap hmp //H_Method public<CR><Esc>cc
 imap hmps //H_Method public static<CR><Esc>cc
 imap hmo //H_Method protected<CR><Esc>cc
@@ -206,19 +197,16 @@ imap hvps //H_MVar public static<CR><Esc>cc
 imap hvos //H_MVar protected static<CR><Esc>cc
 imap hvis //H_MVar private static<CR><Esc>cc
 
-imap hdcc /*H_Declare<CR><Esc>cc#incc<CR>//H_Class <C-n><CR>*/<Esc>kk$a
+"imap hdcc /*H_Declare<CR><Esc>cc#incc<CR>//H_Class <C-n><CR>*/<Esc>kk$a
 "imap #incc #include "cocos2d.h"<CR>#include "cocos-ext.h"<CR>USING_NS_CC;<CR>USING_NS_CC_EXT;<CR>
 "imap usst using namespace std;<CR>
 
 "break auto inserted line headers
-imap <C-n> <Esc>o<Esc>cc
+"imap <C-n> <Esc>o<Esc>cc
 
-nmap <Leader>j :%!python -c 'import sys,json;print json.dumps(json.loads(sys.stdin.read()),indent=4,ensure_ascii=False).encode("utf-8")'<CR>
+nmap <Leader>j :%!python -c 'import sys,json;print json.dumps(json.loads(sys.stdin.read()),indent=4,ensure_ascii=False,sort_keys=True).encode("utf-8")'<CR>
 
 nmap <Leader>r <ESC>:Rename 
-
-"This is for autoclosing brace in c++ source
-imap {<CR> {}<Left><CR><Esc>O
 
 "This is only for my game projects
 iab frjs void ::fromJson(const JSONNode & json)<ESC>^wi
@@ -229,95 +217,99 @@ iab tojs JSONNode ::toJson()<ESC>^wi
 set tags+=~/exhd/code/libcocos2d-x-3.10/tags
 set tags+=~/code/qqgc/tags
 
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+	" Note: This option must set it in .vimrc (_vimrc).
+	" NOT IN .gvimrc (_gvimrc)!
+	" Disable AutoComplPop.
+	let g:acp_enableAtStartup = 0
+	" Use neocomplete.
+	let g:neocomplete#enable_at_startup = 1
+	" Use smartcase.
+	let g:neocomplete#enable_smart_case = 1
 
-" link filetypes for completion source
-if !exists('g:neocomplete#same_filetypes')
-    let g:neocomplete#same_filetypes = {}
-endif
-let g:neocomplete#same_filetypes.cpp = 'c,hpp,h,json,xml,csv'
-let g:neocomplete#same_filetypes.c = 'c,h,json,xml,csv'
+	" Define dictionary.
+	let g:neocomplete#sources#dictionary#dictionaries = {
+	    \ 'default' : '',
+	    \ 'vimshell' : $HOME.'/.vimshell_hist',
+	    \ 'scheme' : $HOME.'/.gosh_completions'
+	    \ }
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+	" Define keyword.
+	if !exists('g:neocomplete#keyword_patterns')
+	    let g:neocomplete#keyword_patterns = {}
+	endif
+	let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+	" Plugin key-mappings.
+	inoremap <expr><C-g>     neocomplete#undo_completion()
+	inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
+	" Recommended key-mappings.
+	" <CR>: close popup and save indent.
+	inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+	function! s:my_cr_function()
+	  "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+	  " For no inserting <CR> key.
+      return pumvisible() ? "\<C-y>" : "\<CR>"
+	endfunction
+	" <TAB>: completion.
+	inoremap <silent><expr> <TAB>
+	      \ pumvisible() ? "\<C-n>" :
+	      \ <SID>check_back_space() ? "\<TAB>" :
+	      \ neocomplete#start_manual_complete()
+	function! s:check_back_space() abort "{{{
+	  let col = col('.') - 1
+	  return !col || getline('.')[col - 1]  =~ '\s'
+	endfunction"}}}
+	" <C-h>, <BS>: close popup and delete backword char.
+	inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+	inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+	" Close popup by <Space>.
+	"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"inoremap <expr><CR>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-" Close popup by <Space>.
-inoremap <expr><CR> pumvisible() ? neocomplete#close_popup() : "\<CR>"
+	" AutoComplPop like behavior.
+    let g:neocomplete#enable_auto_select = 1
 
-" For cursor moving in insert mode(Not recommended)
-"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-" Or set this.
-"let g:neocomplete#enable_cursor_hold_i = 1
-" Or set this.
-"let g:neocomplete#enable_insert_char_pre = 1
+	" Shell like behavior (not recommended.)
+	"set completeopt+=longest
+	"let g:neocomplete#enable_auto_select = 1
+    "let g:neocomplete#disable_auto_complete = 1
+	"inoremap <expr><TAB>  pumvisible() ? "\<Down>" :
+	" \ neocomplete#start_manual_complete()
 
-" AutoComplPop like behavior.
-let g:neocomplete#enable_auto_select = 1
+	" Enable omni completion.
+	autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+	autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+	autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+	autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+	autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+	" Enable heavy omni completion.
+	if !exists('g:neocomplete#sources#omni#input_patterns')
+	  let g:neocomplete#sources#omni#input_patterns = {}
+	endif
+	if !exists('g:neocomplete#force_omni_input_patterns')
+	  let g:neocomplete#force_omni_input_patterns = {}
+	endif
+	"let g:neocomplete#sources#omni#input_patterns.php =
+	"\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+	"let g:neocomplete#sources#omni#input_patterns.c =
+	"\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+	"let g:neocomplete#sources#omni#input_patterns.cpp =
+	"\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+	" For perlomni.vim setting.
+	" https://github.com/c9s/perlomni.vim
+	let g:neocomplete#sources#omni#input_patterns.perl =
+	\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+	" For smart TAB completion.
+    "inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
+            "\ <SID>check_back_space() ? "\<TAB>" :
+            "\ neocomplete#start_manual_complete()
+      "function! s:check_back_space() "{{{
+        "let col = col('.') - 1
+        "return !col || getline('.')[col - 1]  =~ '\s'
+      "endfunction"}}}
 
 "for tabular
 nmap <Leader>a= :Tabularize /=<CR>
@@ -340,3 +332,19 @@ let g:localvimrc_ask=0
 
 map <LEADER>er <ESC>:!python % &<CR>
 
+set background=dark
+colorscheme diokai
+"au BufEnter * colorscheme diokai
+"au BufEnter *.py colorscheme molokai
+
+hi link EasyMotionTarget ErrorMsg
+hi link EasyMotionShade  Comment
+
+hi link EasyMotionTarget2First ErrorMsg
+hi link EasyMotionTarget2Second ErrorMsg
+
+set sessionoptions=buffers
+"IndentLine makes bracket input laggy in C++ files
+let g:indentLine_enabled = 0
+
+let g:netrw_list_hide= '.*\.swp$,.*\.pyc$,.*\.meta$'

@@ -13,3 +13,4 @@
 *.a
 
 *.swp
+__pycache__
