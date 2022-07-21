@@ -11,8 +11,8 @@ Plug 'godlygeek/tabular'
 Plug 'Shougo/deoplete.nvim' 
 Plug 'derekwyatt/vim-fswitch' 
 Plug 'scrooloose/nerdcommenter' 
-Plug 'easymotion/vim-easymotion' 
-"Plug 'phaazon/hop.nvim'
+"Plug 'easymotion/vim-easymotion' 
+Plug 'phaazon/hop.nvim'
 Plug 'dkprice/vim-easygrep'
 Plug 'elzr/vim-json' 
 Plug 'moll/vim-bbye' 
@@ -212,3 +212,9 @@ inoremap <silent><expr> <TAB>
                 return !col || getline('.')[col - 1]  =~ '\s'
                 endfunction"}}}
 
+lua require'hop'.setup {}
+
+nmap <LEADER>b <Cmd>HopWordBC<CR>
+nmap <LEADER>w <Cmd>HopWordAC<CR>
+nmap <LEADER>k <Cmd>HopLineStartBC<CR>
+nmap <LEADER>j <Cmd>HopLineStartAC<CR>
