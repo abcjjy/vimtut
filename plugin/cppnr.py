@@ -23,7 +23,8 @@ class CPPNRPlugin(object):
 
     @neovim.command('Mkcls', nargs='*', complete='dir', sync=True)
     def makeClass(self, args):
-        path = args[0]
+        pwd = self.nvim.eval('getcwd()')
+        path = os.path.normpath(os.path.join(pwd, args[0]))
         self.nvim.out_write(path + '\n')
         di = os.path.dirname(path)
         if di and not os.path.exists(di):

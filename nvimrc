@@ -1,3 +1,6 @@
+let g:python_host_prog = '~/env/bin/python'
+let g:python3_host_prog = '~/env3/bin/python'
+
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'abcjjy/cscope_mappings'
 Plug 'tpope/vim-fugitive' 
@@ -9,6 +12,7 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'derekwyatt/vim-fswitch' 
 Plug 'scrooloose/nerdcommenter' 
 Plug 'easymotion/vim-easymotion' 
+"Plug 'phaazon/hop.nvim'
 Plug 'dkprice/vim-easygrep'
 Plug 'elzr/vim-json' 
 Plug 'moll/vim-bbye' 
@@ -147,7 +151,7 @@ imap hvis //H_MVar private static<CR><Esc>cc
 "break auto inserted line headers
 "imap <C-n> <Esc>o<Esc>cc
 
-nmap <Leader>j :%!python -c 'import sys,json;print json.dumps(json.loads(sys.stdin.read()),indent=4,ensure_ascii=False,sort_keys=True).encode("utf-8")'<CR>
+nmap <Leader>j :%!python3 -m json.tool --sort-keys --no-ensure-ascii<CR>
 
 nmap <Leader>r <ESC>:Rename 
 

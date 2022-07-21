@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 #coding:utf-8
 
 import re
 import sys
 import os.path
 from collections import defaultdict
-import StringIO
+from io import StringIO
 import argparse
 import string
 import logging
